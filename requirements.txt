@@ -4,5 +4,6 @@ Pillow==10.4.0
 wheel==0.43.0
 fpdf2==2.8.1
 numpy==2.0.1
+pandas==2.2.3
 requests==2.32.3
 webdriver-manager==4.0.2
