@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delhi High Court Case Search</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8)), 
+                        url('/static/court-bg.jpg') center/cover no-repeat fixed;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .form-section {
+            padding: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .submit-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-info {
+            background: #cce7ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+        
+        .result-section {
+            background: #f8f9fa;
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .result-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+        
+        .result-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: #2c3e50;
+            min-width: 140px;
+            margin-right: 15px;
+        }
+        
+        .result-value {
+            color: #34495e;
+            flex: 1;
+            word-break: break-word;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 6px;
+            display: inline-block;
+            margin-top: 15px;
+            margin-right: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(46, 204, 113, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+        
+        .download-btn.pdf {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        
+        .download-btn.pdf:hover {
+            box-shadow: 0 8px 15px rgba(243, 156, 18, 0.3);
+        }
+        
+        .pdf-link {
+            color: #e74c3c;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .pdf-link:hover {
+            text-decoration: underline;
+        }
+        
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .instructions h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            color: #856404;
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 5px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-info {
+            background: #cce7ff;
+            color: #004085;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e1e8ed;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .status-message {
+            font-size: 1.1em;
+            margin: 10px 0;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .result-item {
+                flex-direction: column;
+            }
+            
+            .result-label {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" {% if case_id %}data-case-id="{{ case_id }}"{% endif %}>
+        <div class="header">
+            <h1>🏛️ Delhi High Court</h1>
+            <p>Case Information Search System</p>
+        </div>
+        
+        <div class="form-section">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'success' if category == 'success' else ('info' if category == 'info' else 'error') }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Instructions -->
+            <div class="instructions">
+                <h4>📋 Instructions:</h4>
+                <ol>
+                    <li>Select the case type from dropdown</li>
+                    <li>Enter the case number (numeric only)</li>
+                    <li>Select the filing year</li>
+                    <li>Click "Search Case" - system will automatically solve CAPTCHA</li>
+                    <li>Wait for results to load (may take 30-60 seconds)</li>
+                    <li>Download reports in CSV or PDF format</li>
+                </ol>
+            </div>
+            
+            <!-- Search Form -->
+            <form method="POST" id="searchForm">
+                <div class="form-group">
+                    <label for="case_type">📋 Case Type:</label>
+                    <select name="case_type" id="case_type" required>
+                        <option value="">-- Select Case Type --</option>
+                        <option value="CRL.M.C.">CRL.M.C. (Criminal Miscellaneous)</option>
+                        <option value="CRL.A.">CRL.A. (Criminal Appeal)</option>
+                        <option value="CRL.REV.P.">CRL.REV.P. (Criminal Revision Petition)</option>
+                        <option value="CRL.W.P.(C)">CRL.W.P.(C) (Criminal Writ Petition)</option>
+                        <option value="W.P.(C)">W.P.(C) (Writ Petition Civil)</option>
+                        <option value="W.P.(CRL)">W.P.(CRL) (Writ Petition Criminal)</option>
+                        <option value="FAO">FAO (First Appeal Original)</option>
+                        <option value="RFA">RFA (Regular First Appeal)</option>
+                        <option value="CS(OS)">CS(OS) (Civil Suit Original Side)</option>
+                        <option value="CS(COMM)">CS(COMM) (Commercial Suit)</option>
+                        <option value="CM(M)">CM(M) (Civil Miscellaneous - Main)</option>
+                        <option value="RC.REV.">RC.REV. (Rent Control Revision)</option>
+                        <option value="MAC.APP.">MAC.APP. (Motor Accident Claims Appeal)</option>
+                        <option value="LPA">LPA (Letters Patent Appeal)</option>
+                        <option value="TR.P.(C)">TR.P.(C) (Transfer Petition - Civil)</option>
+                        <option value="ARB.P.">ARB.P. (Arbitration Petition)</option>
+                        <option value="ARB.A.">ARB.A. (Arbitration Appeal)</option>
+                        <option value="OMP(I)(COMM.)">OMP(I)(COMM.) (Original Miscellaneous Petition - Interim Commercial)</option>
+                        <option value="OMP(COMM.)">OMP(COMM.) (Original Miscellaneous Petition - Commercial)</option>
+                        <option value="CRL.BAIL">CRL.BAIL (Criminal Bail Application)</option>
+                        <option value="BAIL APPLN.">BAIL APPLN. (Bail Application)</option>
+                        <option value="CRL.M.B.">CRL.M.B. (Criminal Miscellaneous Bail)</option>
+                        <option value="CRL.REF.">CRL.REF. (Criminal Reference)</option>
+                        <option value="CRL.REV.">CRL.REV. (Criminal Revision)</option>
+                        <option value="CRL.W.P.">CRL.W.P. (Criminal Writ Petition)</option>
+                        <option value="W.P.(C)PIL">W.P.(C)PIL (Writ Petition Civil - Public Interest Litigation)</option>
+                        <option value="CO.PET.">CO.PET. (Company Petition)</option>
+                        <option value="CONT.CAS(C)">CONT.CAS(C) (Contempt Case - Civil)</option>
+                        <option value="CONT.CAS(CRL)">CONT.CAS(CRL) (Contempt Case - Criminal)</option>
+                        <option value="ITA">ITA (Income Tax Appeal)</option>
+                        <option value="WTA">WTA (Wealth Tax Appeal)</option>
+                        <option value="ARBP.">ARBP. (Arbitration Petition - Prior)</option>
+                        <option value="EX.P.">EX.P. (Execution Petition)</option>
+                        <option value="REV.P.">REV.P. (Review Petition - Civil)</option>
+                        <option value="CRL.M.A.">CRL.M.A. (Criminal Miscellaneous Application)</option>
+                        <option value="CRL.L.P.">CRL.L.P. (Criminal Leave Petition)</option>
+                        <option value="CRL.O.">CRL.O. (Criminal Original)</option>
+                        <option value="TEST.CAS.">TEST.CAS. (Test Case - Probate/Will)</option>
+                        <option value="MAT.APP.">MAT.APP. (Matrimonial Appeal)</option>
+                        <option value="ARBT.">ARBT. (Arbitration Tribunal Matter)</option>
+                        <option value="CO.A(SB)">CO.A(SB) (Company Appeal - Single Bench)</option>
+                        <option value="CO.A(DB)">CO.A(DB) (Company Appeal - Division Bench)</option>
+                        <option value="CA">CA (Company Application)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="case_number">🔢 Case Number:</label>
+                    <input type="number" name="case_number" id="case_number" 
+                           placeholder="Enter case number (e.g., 4373)" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="filing_year">📅 Filing Year:</label>
+                    <select name="filing_year" id="filing_year" required>
+                        <option value="">-- Select Year --</option>
+                        {% for year in range(2025, 1990, -1) %}
+                            <option value="{{ year }}">{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    🔍 Search Case Information
+                </button>
+            </form>
+            
+            <!-- Loading Animation -->
+            <div class="loading" id="loadingDiv" {% if searching %}style="display: block;"{% endif %}>
+                <div class="spinner"></div>
+                <div class="status-message" id="statusMessage">
+                    🤖 Processing your request...<br>
+                    Automatically solving CAPTCHA and extracting data...
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p id="progressText">Starting search...</p>
+            </div>
+            
+            <!-- Results Section -->
+            {% if data and data.status == 'Success' %}
+                <div class="result-section">
+                    <h3>📊 Case Information Retrieved</h3>
+
+                    <div class="result-item">
+                        <div class="result-label">Status:</div>
+                        <div class="result-value">
+                            <span class="status-badge status-success">{{ data.status }}</span>
+                        </div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Case Status:</div>
+                        <div class="result-value">{{ data.case_status if data.case_status else 'N/A' }}</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Case Info:</div>
+                        <div class="result-value">{{ data.case_info if data.case_info else 'N/A' }}</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Parties:</div>
+                        <div class="result-value">{{ data.parties if data.parties else 'N/A' }}</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Filing Date:</div>
+                        <div class="result-value">{{ data.filing_date if data.filing_date else 'N/A' }}</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Next Hearing:</div>
+                        <div class="result-value">{{ data.next_hearing if data.next_hearing else 'N/A' }}</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Judge:</div>
+                        <div class="result-value">{{ data.judge if data.judge else 'N/A' }}</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Advocate:</div>
+                        <div class="result-value">{{ data.advocate if data.advocate else 'N/A' }}</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Court URL:</div>
+                        <div class="result-value">
+                            <a href="{{ data.url }}" target="_blank" class="pdf-link">{{ data.url }}</a>
+                        </div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">PDF Link:</div>
+                        <div class="result-value">
+                            {% if data.pdf_link and data.pdf_link != '#' and data.pdf_link != 'N/A' %}
+                                <a href="{{ data.pdf_link }}" target="_blank" class="pdf-link">
+                                    📄 View Court Forms PDF
+                                </a>
+                            {% else %}
+                                Not Available
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Raw Content:</div>
+                        <div class="result-value">
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; font-family: monospace; white-space: pre-line; max-height: 200px; overflow-y: auto;">{{ data.raw_content if data.raw_content else 'N/A' }}</div>
+                        </div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Extracted At:</div>
+                        <div class="result-value">{{ data.extracted_at if data.extracted_at else 'N/A' }}</div>
+                    </div>
+
+                    <!-- Download buttons -->
+                    <div style="margin-top: 20px;">
+                        <a href="/download/case_data.csv" class="download-btn">
+                            💾 Download CSV Report
+                        </a>
+                        <a href="/download/case_data.pdf" class="download-btn pdf">
+                            📋 Download PDF Report
+                        </a>
+                        <a href="/clear" class="download-btn" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+                            🗑️ Clear Data
+                        </a>
+                    </div>
+                </div>
+            {% elif data and data.status == 'Failed' %}
+                <div class="alert alert-error">
+                    <strong>Search Failed:</strong> {{ data.error }}
+                    <br><br>
+                    <a href="/clear" class="download-btn" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); margin-top: 10px;">
+                        🗑️ Clear and Try Again
+                    </a>
+                </div>
+            {% endif %}
+        
+        </div>
+        
+        <div class="footer">
+            <p>🔧 Automated Case Information Retrieval System</p>
+            <p>⚖️ For Educational and Learning Purposes Only</p>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize variables
+        let currentCaseId = null;
+        let pollInterval = null;
+        
+        // Set case ID from server
+        const container = document.querySelector('.container');
+        currentCaseId = container.dataset.caseId || null;
+        
+        // Show loading animation on form submit
+        document.getElementById('searchForm').addEventListener('submit', function() {
+            document.getElementById('loadingDiv').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').textContent = '⏳ Searching...';
+        });
+        
+        // Function to poll case status
+        function pollCaseStatus() {
+            if (!currentCaseId) return;
+            
+            fetch('/api/status/' + currentCaseId)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Status update:', data);
+                    
+                    if (data.found) {
+                        // Update progress bar
+                        document.getElementById('progressFill').style.width = data.progress + '%';
+                        document.getElementById('progressText').textContent = data.progress + '% - ' + data.message;
+                        document.getElementById('statusMessage').innerHTML = 
+                            '🤖 ' + data.message + '<br>Please wait...';
+                        
+                        // Check if completed
+                        if (data.status === 'completed' || data.status === 'failed' || data.status === 'completed_with_warning') {
+                            clearInterval(pollInterval);
+                            
+                            if (data.data_available) {
+                                // Reload page to show results
+                                setTimeout(function() {
+                                    window.location.reload();
+                                }, 2000);
+                                
+                                document.getElementById('statusMessage').innerHTML = 
+                                    '✅ Search completed! Reloading page...';
+                            } else {
+                                // Show error and allow retry
+                                document.getElementById('statusMessage').innerHTML = 
+                                    '❌ Search failed. Please try again.';
+                                document.getElementById('submitBtn').disabled = false;
+                                document.getElementById('submitBtn').textContent = '🔍 Search Case Information';
+                                document.getElementById('loadingDiv').style.display = 'none';
+                            }
+                        }
+                    } else {
+                        // Case not found, stop polling
+                        clearInterval(pollInterval);
+                        document.getElementById('loadingDiv').style.display = 'none';
+                        document.getElementById('submitBtn').disabled = false;
+                        document.getElementById('submitBtn').textContent = '🔍 Search Case Information';
+                    }
+                })
+                .catch(function(error) {
+                    console.log('Status polling error:', error);
+                });
+        }
+        
+        // Start polling if we have a case ID and are searching
+        if (currentCaseId && document.getElementById('loadingDiv').style.display === 'block') {
+            pollInterval = setInterval(pollCaseStatus, 3000); // Poll every 3 seconds
+            pollCaseStatus(); // Initial call
+        }
+        
+        // Auto-hide alerts after 10 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.opacity = '0';
+                alert.style.transition = 'opacity 0.5s ease';
+                setTimeout(function() {
+                    alert.style.display = 'none';
+                }, 500);
+            });
+        }, 10000);
+        
+        // Cleanup interval on page unload
+        window.addEventListener('beforeunload', function() {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+            }
+        });
+    </script>
+</body>
+</html>

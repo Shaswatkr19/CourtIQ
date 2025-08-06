@@ -1,0 +1,8 @@
+__pycache__/
+venv/
+.idea/
+case_search.db
+chrome_driver/
+chrome_driver.zip
+chromedriver_mac_arm64.zip
+LICENSE.chromedriver

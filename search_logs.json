@@ -1,0 +1,32 @@
+[
+  {
+    "timestamp": "2025-08-06T01:34:06.629488",
+    "case_id": "CRL.M.C._4373_2018_1754424183",
+    "case_type": "CRL.M.C.",
+    "case_number": 4373,
+    "filing_year": 2018,
+    "status": "SUCCESS",
+    "error_message": null,
+    "ip_address": "localhost"
+  },
+  {
+    "timestamp": "2025-08-06T01:43:23.843104",
+    "case_id": "CRL.M.C._4373_2018_1754424748",
+    "case_type": "CRL.M.C.",
+    "case_number": 4373,
+    "filing_year": 2018,
+    "status": "SUCCESS",
+    "error_message": null,
+    "ip_address": "localhost"
+  },
+  {
+    "timestamp": "2025-08-07T00:47:03.098016",
+    "case_id": "CRL.M.C._4373_2023_1754507775",
+    "case_type": "CRL.M.C.",
+    "case_number": 4373,
+    "filing_year": 2023,
+    "status": "SUCCESS",
+    "error_message": null,
+    "ip_address": "localhost"
+  }
+]
