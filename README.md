@@ -3,7 +3,6 @@
 **CourtIQ** is a full-stack web application that fetches **real-time Delhi High Court case status** using Python, Flask, Selenium, and automated CAPTCHA bypass.
 # 📄 CourtIQ – Delhi High Court Case Status Fetcher 🏛️
 
-[🚀 Live Demo](https://courtiq-zv4i.onrender.com) 
 
 This tool was built as part of an internship project and demonstrates advanced automation in web scraping with real, working components—**no dummy logic, no paid APIs**.
 
